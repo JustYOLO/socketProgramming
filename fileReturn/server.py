@@ -1,3 +1,13 @@
+'''
+txt file only
+
+
+if server has file ==> make a function that returns file 
+else ==> returns error message to client
+
+do not use flags
+'''
+
 import os
 from socket import *
 
@@ -22,21 +32,27 @@ print(file_dict)
 
 print("The server is ready to receive")
 while True:
-    file_name, clientAddress = serverSocket.recvfrom(2048) # client.py와 동일
-    file_name = file_name.decode()
-    print(f"received from {clientAddress}. file_name is: {file_name}") # client의 주소와 메세지를 표시
+    clientMessage, clientAddress = serverSocket.recvfrom(2048) # client.py와 동일
+    clientMessage = clientMessage.decode()
+    file_name, operator = map(str, clientMessage.split())
+    print(f"received from {clientAddress}. received message is {clientMessage}") # client의 주소와 메세지를 표시
+
+
+
     if file_name in file_list:
         print("file found with file extension")
         targetFile = file_open(file_name, DIR)
-        print(type(targetFile))
-
 
     elif file_name in file_dict.keys():
         print("file found without file extension")
-        targetFile = file_open(f"{file_name}.{file_dict[file_name]}", DIR)
-        print(type(targetFile))
+        file_name = f"{file_name}.{file_dict[file_name]}"
+
+    targetFile = file_open(file_name, DIR)
+    print(type(targetFile))
     
     fileData = targetFile.read()
+    # first line is for c&s connection
+    serverMessage = "200 file_found" + fileData
     
-    serverSocket.sendto(fileData.encode(), clientAddress)
+    serverSocket.sendto(serverMessage.encode(), clientAddress)
     targetFile.close()

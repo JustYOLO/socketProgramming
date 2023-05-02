@@ -11,14 +11,21 @@ clientSocket = socket(AF_INET, SOCK_DGRAM) # client가 사용할 소켓을 선�
 # AF_NET은 IPv4를 사용하겠다는 것으로 추정...? 
 # SOCK_DGRAM은 UDP를 사용하겠다는 상수
 # 두 상수(AF_NET, SOCK_DGRAM) 모두 socket 모듈에 포함되어있음
-message = input('Input lowercase sentence: ') # client가 보낼 메세지를 저장
-clientSocket.sendto(message.encode(), (SERVER_NAME, SERVER_PORT)) # clientSocket을 이용해 message의 내용을 인코딩 (.encode()시 utf-8로 인코딩)해서 보냄. 서버이름과 포트번호를 지정
+message = input('Input request: ') # client가 보낼 메세지를 저장
+clientSocket.sendto(message.encode(), (SERVER_NAME, SERVER_PORT)) # message contains "{filename}.{file extension} {write or open}".
 
 receivedData, serverAddress = clientSocket.recvfrom(2048)
 print(receivedData)
-f = open('test.txt', 'w')
-f.write(receivedData.decode())
-f.close()
+
+lines = list(map(str, receivedData.decode().split("\n")))
+print(lines[0])
+if lines[0][:3] == "200":
+    del lines[0]
+    f = open('test.txt', 'w')
+    for line in lines:
+        f.write(f"{line}\n")
+    f.close()
+
 
 clientSocket.close()
 # 소켓 닫음
