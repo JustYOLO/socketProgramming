@@ -1,7 +1,10 @@
 '''
+file read and write
 client.py
 
-
+client gets three operations: 'r' (read), 'w' (write), '!e' (end)
+input: {operation} {file_name}.{extension}
+if operation is w ==> client accept input for writable data. Input single dot (.) to end input and send
 '''
 from socket import *
 
@@ -19,6 +22,18 @@ while True:
         msg = "!e\n."
         clientSocket.send(msg.encode("utf-8"))
         break
+    elif msg[0] == 'w':
+        print("input single dot '.' to end write input: ")
+        body = ''
+        while True:
+            line = input()
+            if line == '.':
+                body += '.'
+                break
+            body += line + '\n'
+        msg += '\n'
+        msg += body
+        clientSocket.send(msg.encode("utf-8"))
     else:
         msg = msg.replace("\\n", '\n')
         print(msg)
@@ -26,5 +41,6 @@ while True:
         clientSocket.send(msg.encode("utf-8"))
     
     data = clientSocket.recv(1024)
-    print("받은 데이터:", data.decode("utf-8"))
+    print("recevied data:", data.decode("utf-8"))
+    print("--------------------------")
 clientSocket.close()

@@ -1,10 +1,10 @@
 '''
-file read
+math expression
 client.py
 
 client sends:
 
-    {file name}.txt\n
+    {math expression}
     .
 
 msg should end with a single dot
@@ -20,7 +20,7 @@ clientSocket.connect((ip, port))
 print("connected to server.")
 print("input '!e' for close connection and exit.")
 while True:
-    msg = input("input file name: ")
+    msg = input("input math expression: ")
     if msg == "!e":
         msg = "!e\n."
         clientSocket.send(msg.encode("utf-8"))
@@ -31,12 +31,10 @@ while True:
     data = clientSocket.recv(1024)
     msg = data.decode("utf-8")
     print("received raw data:", msg, end="\n\n")
-    if msg[:3] == "404": print("server cannot find requested file.")
+    if msg[:3] == "400": print("server cannot accept operation.")
     else:
         lines = list(msg.split('\n'))
         lines.pop(0); lines.pop()
-        print("Body of the requested file:")
-        for line in lines:
-            print(line)
+        print(f"Expression's result is : {lines[0]}")
     print("--------------------------")
 clientSocket.close()
