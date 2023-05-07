@@ -10,6 +10,7 @@ port = 9120 # just random port
 
 clientSocket = socket(AF_INET, SOCK_STREAM)
 clientSocket.connect((ip, port))
+print("connected to server")
 print("input '!e' for close connection and exit")
 while True:
     msg = input("input message: ")
