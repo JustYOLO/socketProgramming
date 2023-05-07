@@ -19,7 +19,7 @@ BAD_REQUEST = "400 Bad Request\n"
 OK = "200 OK\n"
 ACCEPT = set("1234567890-+*/() ")
 
-def send_msg(socket, status, body = ""):
+def send_msg(socket, status, body = ''):
     msg = ''
     msg += status
     msg += body
