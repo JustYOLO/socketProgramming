@@ -70,6 +70,24 @@ def get_domain_dict(db: pymysql.Connection):
     ip_dict = get_ip_dict(db)
     domain_dict = {y: x for x, y in ip_dict.items()}
     return domain_dict
+def is_ip(ip: str):
+    '''
+    주어진 str(ip)이 IPv4 형식인지 확인하는 함수
+    return: boolean
+    '''
+    try:
+        nums = list(map(int, ip.split('.')))
+    except ValueError:
+        print("IP string format is not valid")
+        return False
+    if len(nums) != 4:
+        return False
+    for num in nums:
+        if num < 0 or num > 255:
+            return False
+    return True
+
+
 
 def f1(soc: socket, address: str, db: pymysql.Connection):
     '''
@@ -112,6 +130,8 @@ def f1(soc: socket, address: str, db: pymysql.Connection):
                 operator, domain, ip = msg.split(' ') # 명령어와 도메인, ip를 분리
                 if any(char in REJECT for char in domain) and any(char in REJECT for char in ip): # 도메인과 명령어에 허용되지 않은 특수문자가 들어갈 경우
                     send_msg(soc, BAD_REQUEST) # 에러 메세지 전달
+                elif not is_ip(ip):
+                    send_msg(soc, BAD_REQUEST, "Given IP is not valid IP address")
                 else:
                     add_rr(db, ip, domain) # 허용될 경우
                     send_msg(soc, OK)
