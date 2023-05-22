@@ -35,8 +35,6 @@ while True:
         msg += body
         clientSocket.send(msg.encode("utf-8"))
     else:
-        msg = msg.replace("\\n", '\n')
-        print(msg)
         msg += "\n."
         clientSocket.send(msg.encode("utf-8"))
     

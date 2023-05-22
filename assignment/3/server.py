@@ -35,7 +35,6 @@ def send_msg(socket: socket, status: str, body = ""):
     msg += status
     msg += body
     socket.send(msg.encode("utf-8"))
-
 def get_rr(db: pymysql.Connection):
     '''
     매개변수로 받은 db로 MySQL 서버에서 Resource Record를 받는다.
@@ -87,8 +86,6 @@ def is_ip(ip: str):
             return False
     return True
 
-
-
 def f1(soc: socket, address: str, db: pymysql.Connection):
     '''
     각 client의 연결을 f1 함수로 설정하여 thread를 생성
@@ -135,7 +132,7 @@ def f1(soc: socket, address: str, db: pymysql.Connection):
                 else:
                     add_rr(db, ip, domain) # 허용될 경우
                     send_msg(soc, OK)
-            elif msg == "!e": # 명령이 '!e'일 경우(연결 종료 요청)
+            elif msg[:2] == "!e": # 명령이 '!e'일 경우(연결 종료 요청)
                 print(f"connection close request by: {address}", end= ' ')
                 break # 반복문을 중단
             else: # 위 명령어중 아무것도 해당하지 않을 경우

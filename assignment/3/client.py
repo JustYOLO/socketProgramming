@@ -23,11 +23,9 @@ print("connected to server.")
 print("input '!e' for close connection and exit.")
 while True:
     msg = input("input operation: ")
+    clientSocket.send(msg.encode("utf-8"))
     if msg == "!e":
-        clientSocket.send(msg.encode("utf-8"))
         break
-    else:
-        clientSocket.send(msg.encode("utf-8"))
     
     data = clientSocket.recv(1024)
     msg = data.decode("utf-8")
